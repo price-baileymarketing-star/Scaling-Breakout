@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Scale Up | Price Bailey</title>
+<title>ScaleUp | Price Bailey</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
   html, body { width: 100%; height: 100%; overflow: hidden; background: #0a1128; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; touch-action: none; overscroll-behavior: none; }
@@ -40,8 +40,8 @@
   <div class="overlay active" id="startScreen">
     <div class="pb-logo"><img src="https://github.com/price-baileymarketing-star/Scaling-Breakout/blob/main/PB%20Box%20Logo.jpg?raw=true" alt="Price Bailey"></div>
     <h1>Scale <span class="brand">Up</span></h1>
-    <h2>Price Bailey - Strategic Growth Simulator</h2>
-    <p class="desc">Guide your business through every stage of scaling up - from initial funding through regulatory compliance and market competition - to achieve a successful IPO. Drag the executive desk to deflect investment and break through obstacles.</p>
+    <h2>Price Bailey - ScaleUp Growth Game</h2>
+    <p class="desc">Guide your business and break through the barriers to growth - from initial funding through regulatory compliance and market competition - to achieve a successful IPO. Drag the executive desk to deflect investment and break through obstacles.</p>
     <button class="btn" id="startBtn">Begin Growth Phase</button>
     <a class="soft-cta" href="https://www.pricebailey.co.uk/enquiry-form/" target="_blank" rel="noopener">Talk to a Price Bailey advisor &rarr;</a>
     <div class="terminal-line">&gt; SYSTEM READY &middot; TOUCH TO BEGIN</div>
@@ -50,9 +50,9 @@
   <div class="overlay" id="winScreen">
     <div class="pb-logo"><img src="https://github.com/price-baileymarketing-star/Scaling-Breakout/blob/main/PB%20Box%20Logo.jpg?raw=true" alt="Price Bailey"></div>
     <h1>IPO <span class="brand">Successful</span></h1>
-    <h2>Exit Strategy Achieved</h2>
+    <h2>Growth Strategy Achieved</h2>
     <div class="valuation" id="finalValuation">&pound;0</div>
-    <p class="desc">Congratulations on a successful public offering. Your business has reached its full strategic potential through disciplined growth and market execution.</p>
+    <p class="desc">Congratulations on a successful public offering. Your business has reached its full potential through disciplined growth and market execution.</p>
     <button class="btn" id="playAgainBtn">Play Again</button>
     <a class="soft-cta prominent" href="https://www.pricebailey.co.uk/enquiry-form/" target="_blank" rel="noopener">Ready to scale your real business? Talk to Price Bailey &rarr;</a>
   </div>
@@ -62,8 +62,8 @@
     <h1>Business <span class="brand">Stalled</span></h1>
     <h2>Growth Phase Interrupted</h2>
     <div class="valuation" id="loseValuation" style="color:#e74c3c;text-shadow:0 0 30px rgba(231,76,60,0.5)">&pound;0</div>
-    <p class="desc">Every successful business faces setbacks. With the right strategy and advisors, growth can be restarted. Time to regroup and try again.</p>
-    <button class="btn" id="restartBtn">Restart Growth Phase</button>
+    <p class="desc">Every successful business faces setbacks. With the right strategy and advisors, growth can be achived. Time to regroup and try again.</p>
+    <button class="btn" id="restartBtn">Restart Game</button>
     <a class="soft-cta prominent" href="https://www.pricebailey.co.uk/enquiry-form/" target="_blank" rel="noopener">Need real strategic advice? Talk to Price Bailey &rarr;</a>
   </div>
 </div>
@@ -241,14 +241,14 @@
 
   var newsItems = [
     'MARKET RALLIES ON STRONG EARNINGS',
-    'FED HOLDS INTEREST RATES STEADY',
+    'BANK OF ENGLAND HOLDS INTEREST RATES STEADY',
     'TECH SECTOR LEADS GAINS',
     'IPO ACTIVITY HITS RECORD HIGH',
-    'MERGER MANIA SWEEPS WALL STREET',
+    'MERGER MANIA SWEEPS LONDON',
     'GLOBAL TRADE OPTIMISM RETURNS',
     'BULLS CHARGE INTO Q4',
     'ANALYSTS RAISE FORECASTS',
-    'CENTRAL BANK SIGNALS GROWTH',
+    'OBR SIGNALS GROWTH',
     'M&A DEALS REACH ALL-TIME HIGH'
   ];
   var newsBanner = null;
@@ -377,7 +377,7 @@
 
     // Row B: Competition (moving)
     y += brickH + gap;
-    var compLabels = ['Competitor A', 'Pricing War', 'Market Share', 'Disruption', 'Rival Co', 'Pricing War', 'Competitor B', 'Market Share', 'Disruption', 'Rival Co'];
+    var compLabels = ['Competitor', 'Pricing War', 'Market Share', 'Disruption', 'Rival Co', 'Pricing War', 'Market Share', 'Disruption', 'Rival Co'];
     for (var i2 = 0; i2 < cols; i2++) {
       var bx = sideMargin + i2 * (brickW + gap);
       bricks.push({
@@ -1640,7 +1640,7 @@
     ctx.fillText('Scale Up', 80, hudTop + 22);
     ctx.fillStyle = COLORS.tealLight;
     ctx.font = '300 11px Courier New, monospace';
-    ctx.fillText('PRICE BAILEY - STRATEGIC GROWTH', 80, hudTop + 38);
+    ctx.fillText('PRICE BAILEY - SCALEUP GROWTH GAME', 80, hudTop + 38);
 
     ctx.fillStyle = COLORS.tealLight;
     ctx.font = '300 11px Courier New, monospace';
