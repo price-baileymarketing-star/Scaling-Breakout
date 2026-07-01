@@ -23,6 +23,8 @@
   .overlay .desc { max-width: 600px; font-size: clamp(14px, 1.8vw, 18px); line-height: 1.6; color: #b8d4d4; margin-bottom: 28px; font-weight: 300; }
   .btn { background: linear-gradient(135deg, #1aa6a6 0%, #0d8a8a 100%); color: #fff; border: none; padding: 16px 48px; font-size: clamp(16px, 2vw, 20px); font-weight: 500; letter-spacing: 1.5px; border-radius: 4px; cursor: pointer; text-transform: uppercase; box-shadow: 0 4px 20px rgba(26, 166, 166, 0.4); transition: transform 0.15s, box-shadow 0.15s; }
   .btn:active { transform: scale(0.97); box-shadow: 0 2px 10px rgba(26, 166, 166, 0.3); }
+  .btn-secondary { background: transparent; border: 1px solid rgba(26, 166, 166, 0.5); box-shadow: none; color: #8ec5c5; margin-top: 14px; padding: 12px 40px; }
+  .btn-secondary:active { transform: scale(0.97); box-shadow: none; }
   .soft-cta { display: inline-block; margin-top: 20px; color: #8ec5c5; font-size: clamp(13px, 1.5vw, 15px); text-decoration: none; padding: 10px 20px; border: 1px solid rgba(26, 166, 166, 0.3); border-radius: 4px; letter-spacing: 0.5px; transition: all 0.2s; background: rgba(26, 166, 166, 0.05); }
   .soft-cta:hover { color: #fff; border-color: #1aa6a6; background: rgba(26, 166, 166, 0.15); transform: translateY(-1px); }
   .soft-cta.prominent { margin-top: 16px; color: #fff; border-color: #1aa6a6; background: rgba(26, 166, 166, 0.2); font-weight: 500; padding: 12px 24px; }
@@ -48,7 +50,6 @@
     <h2>Price Bailey - ScaleUp Growth Game</h2>
     <p class="desc">Guide your business and break through the barriers to growth - from initial funding through regulatory compliance and market competition - to achieve a successful IPO. Drag the executive desk to deflect investment and break through obstacles.</p>
     <button class="btn" id="startBtn">Begin Growth Phase</button>
-    <a class="soft-cta" href="https://www.pricebailey.co.uk/enquiry-form/" target="_blank" rel="noopener">Talk to a Price Bailey advisor &rarr;</a>
     <div class="terminal-line">&gt; SYSTEM READY &middot; TOUCH TO BEGIN</div>
   </div>
 
@@ -59,8 +60,8 @@
     <div class="time-bonus-display" id="timeBonusDisplay"></div>
     <div class="valuation" id="finalValuation">&pound;0</div>
     <p class="desc">Congratulations on a successful public offering. Your business has reached its full potential through disciplined growth and market execution.</p>
-    <button class="btn" id="playAgainBtn">Play Again</button>
-    <a class="soft-cta prominent" href="https://www.pricebailey.co.uk/enquiry-form/" target="_blank" rel="noopener">Ready to scale your real business? Talk to Price Bailey &rarr;</a>
+    <button class="btn" id="winFormBtn">Leave your details &rarr;</button>
+    <button class="btn btn-secondary" id="playAgainBtn">Play Again</button>
   </div>
 
   <div class="overlay" id="loseScreen">
@@ -68,15 +69,15 @@
     <h1>Business <span class="brand">Stalled</span></h1>
     <h2>Growth Phase Interrupted</h2>
     <div class="valuation" id="loseValuation" style="color:#e74c3c;text-shadow:0 0 30px rgba(231,76,60,0.5)">&pound;0</div>
-    <p class="desc">Every successful business faces setbacks. With the right strategy and advisors, growth can be achieved. Time to regroup and try again.</p>
-    <button class="btn" id="restartBtn">Restart Game</button>
-    <a class="soft-cta prominent" href="https://www.pricebailey.co.uk/enquiry-form/" target="_blank" rel="noopener">Need real strategic advice? Talk to Price Bailey &rarr;</a>
+    <p class="desc">Every successful business faces setbacks. With the right strategy and advisers, growth can be achieved. Time to regroup and try again.</p>
+    <button class="btn" id="loseFormBtn">Leave your details &rarr;</button>
+    <button class="btn btn-secondary" id="restartBtn">Restart Game</button>
   </div>
 </div>
 
 <a class="ingame-cta" href="https://www.pricebailey.co.uk/enquiry-form/" target="_blank" rel="noopener" id="ingameCTA">
   <span class="cta-icon">&#9993;</span>
-  <span class="cta-text">Talk to an advisor</span>
+  <span class="cta-text">Talk to an adviser</span>
 </a>
 
 <script>
@@ -2100,6 +2101,30 @@
       startGame();
     }, { passive: false });
   });
+
+  // ---------- Price Bailey enquiry form ----------
+  // Passes the final score and the game's own URL as WPForms prefill params
+  // so the form's "Play again" can send the player back here.
+  var FORM_BASE = 'https://www.pricebailey.co.uk/enquiry-form/game/';
+  var SCORE_FIELD = 'wpf72332_23';   // score field
+  var GAMEURL_FIELD = 'wpf72332_30'; // Game_URL field (field id 30, from the form source)
+  var GAME_URL = 'https://price-baileymarketing-star.github.io/Scaling-Breakout/'; // TODO: confirm live GitHub Pages URL
+
+  var winFormBtn = document.getElementById('winFormBtn');
+  var loseFormBtn = document.getElementById('loseFormBtn');
+
+  function openEnquiryForm() {
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+    var params = new URLSearchParams();
+    params.set(SCORE_FIELD, Math.max(0, Math.round(score)));
+    params.set(GAMEURL_FIELD, GAME_URL);
+    window.location.href = FORM_BASE + '?' + params.toString(); // same tab
+  }
+
+  winFormBtn.addEventListener('click', openEnquiryForm);
+  loseFormBtn.addEventListener('click', openEnquiryForm);
+  winFormBtn.addEventListener('touchstart', function(e) { e.preventDefault(); openEnquiryForm(); }, { passive: false });
+  loseFormBtn.addEventListener('touchstart', function(e) { e.preventDefault(); openEnquiryForm(); }, { passive: false });
 
   // ---------- Init ----------
   resize();
