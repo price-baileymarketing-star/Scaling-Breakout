@@ -2101,20 +2101,31 @@
       startGame();
     }, { passive: false });
   });
-// Price Bailey enquiry form. Passes the final score and the game's own URL
-// (so the form's "Play again" can send them back here) as WPForms prefill params.
-const FORM_BASE = 'https://www.pricebailey.co.uk/enquiry-form/game/';
-const SCORE_FIELD = 'wpf72332_23';                 // score field
-const GAMEURL_FIELD = 'wpf72332_31';               // Game_URL field (field id 31, from the form source)
-const GAME_URL = 'https://price-baileymarketing-star.github.io/control-freak/';
-document.getElementById('btn-form').addEventListener('click', () => {
-  Audio.resume();
-  const params = new URLSearchParams();
-  params.set(SCORE_FIELD, Math.max(0, state.score));
-  params.set(GAMEURL_FIELD, GAME_URL);
-  window.location.href = FORM_BASE + '?' + params.toString();   // same tab
-});
-  
+
+  // ---------- Price Bailey enquiry form ----------
+  // Passes the final score and the game's own URL as WPForms prefill params
+  // so the form's "Play again" can send the player back here.
+  var FORM_BASE = 'https://www.pricebailey.co.uk/enquiry-form/game/';
+  var SCORE_FIELD = 'wpf72332_23';   // score field
+  var GAMEURL_FIELD = 'wpf72332_30'; // Game_URL field (field id 30, from the form source)
+  var GAME_URL = 'https://price-baileymarketing-star.github.io/Scaling-Breakout/'; // TODO: confirm live GitHub Pages URL
+
+  var winFormBtn = document.getElementById('winFormBtn');
+  var loseFormBtn = document.getElementById('loseFormBtn');
+
+  function openEnquiryForm() {
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+    var params = new URLSearchParams();
+    params.set(SCORE_FIELD, Math.max(0, Math.round(score)));
+    params.set(GAMEURL_FIELD, GAME_URL);
+    window.location.href = FORM_BASE + '?' + params.toString(); // same tab
+  }
+
+  winFormBtn.addEventListener('click', openEnquiryForm);
+  loseFormBtn.addEventListener('click', openEnquiryForm);
+  winFormBtn.addEventListener('touchstart', function(e) { e.preventDefault(); openEnquiryForm(); }, { passive: false });
+  loseFormBtn.addEventListener('touchstart', function(e) { e.preventDefault(); openEnquiryForm(); }, { passive: false });
+
   // ---------- Init ----------
   resize();
   buildCandlesticks();
