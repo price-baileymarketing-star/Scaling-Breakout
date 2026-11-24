@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>ScaleUp | Price Bailey</title>
+<link rel="icon" href="assets/pb-box-logo.jpg">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
   html, body { width: 100%; height: 100%; overflow: hidden; background: #0a1128; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; touch-action: none; overscroll-behavior: none; }
@@ -37,6 +38,72 @@
   .pb-logo img { height: 80px; width: auto; display: block; }
   #confettiCanvas { position: absolute; inset: 0; pointer-events: none; z-index: 9; }
   .terminal-line { font-family: 'Courier New', monospace; color: #1aa6a6; font-size: 12px; letter-spacing: 2px; margin-top: 20px; opacity: 0.7; }
+
+  /* ---------- Brand colours (keep identical to controller/index.html) ---------- */
+  :root { --pb-teal: #008080; --pb-teal-2: #27baa4; --pb-yellow: #fcb53a; --pb-red: #b70b4a; --err-on-dark: #ff9db8; }
+
+  /* Typing must work inside the details form (the page-wide rule above blocks it on iOS) */
+  input { -webkit-user-select: text; user-select: text; }
+
+  /* Overlays that can scroll when the on-screen keyboard is open */
+  .overlay.scrollable { overflow-y: auto; justify-content: flex-start; touch-action: pan-y; -webkit-overflow-scrolling: touch; }
+  .overlay.scrollable > * { margin-top: auto; margin-bottom: auto; }
+
+  /* Title screen: lets the moving background show through (attract mode) */
+  #startScreen { background: rgba(10, 17, 40, 0.78); backdrop-filter: blur(3px); }
+  .start-grid { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: clamp(24px, 5vw, 72px); max-width: 1120px; }
+  .start-main { display: flex; flex-direction: column; align-items: center; max-width: 560px; }
+  .qr-card { display: flex; flex-direction: column; align-items: center; width: clamp(190px, 24vw, 260px); padding: 16px; border-radius: 12px;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(39,186,164,0.55); }
+  .qr-title { font-size: clamp(15px, 1.7vw, 19px); font-weight: 600; margin-bottom: 10px; color: #fff; }
+  .qr-box { width: 100%; aspect-ratio: 1 / 1; background: #fff; border-radius: 8px; padding: 8px; display: flex; align-items: center; justify-content: center; }
+  .qr-box svg { width: 100%; height: 100%; display: block; }
+  .qr-box .qr-off { color: #0a1128; font-size: 14px; padding: 12px; }
+  .qr-code { margin-top: 10px; font-family: 'Courier New', monospace; font-size: clamp(26px, 3vw, 36px); font-weight: 700; letter-spacing: 0.3em; padding-left: 0.3em; color: var(--pb-yellow); }
+  .qr-url { margin-top: 2px; font-family: 'Courier New', monospace; font-size: 11px; color: #9fc3c3; word-break: break-all; text-align: center; line-height: 1.35; }
+  .qr-status { margin-top: 12px; display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; font-size: 14px; font-weight: 600;
+    color: #fff; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.25); text-align: center; }
+  .qr-status .dot { flex: 0 0 auto; width: 10px; height: 10px; border-radius: 50%; background: var(--pb-yellow); }
+  .qr-status.ok { border-color: var(--pb-teal-2); }
+  .qr-status.ok .dot { background: var(--pb-teal-2); }
+  .qr-status.bad { border-color: var(--err-on-dark); }
+  .qr-status.bad .dot { background: var(--err-on-dark); border-radius: 2px; }
+
+  /* Details form on the big screen */
+  .form-card { width: min(560px, 94vw); padding: 8px 0; text-align: left; }
+  .form-card h1 { font-size: clamp(24px, 3.4vw, 36px); text-align: center; margin-bottom: 6px; }
+  .form-card .desc { text-align: center; margin: 0 auto 18px; font-size: clamp(14px, 1.6vw, 17px); }
+  .frow { display: flex; gap: 12px; }
+  .frow .ff { flex: 1 1 0; min-width: 0; }
+  .ff { margin-bottom: 12px; }
+  .ff label { display: block; font-size: 15px; font-weight: 600; margin-bottom: 5px; color: #e6f2f2; }
+  .ff label .opt { font-weight: 400; color: #9fc3c3; }
+  .ff input[type=text], .ff input[type=email], .ff input[type=tel] { width: 100%; min-height: 52px; padding: 10px 14px; font-size: 18px; color: #fff;
+    background: rgba(255,255,255,0.08); border: 2px solid rgba(255,255,255,0.28); border-radius: 8px; }
+  .ff input[aria-invalid=true] { border-color: var(--err-on-dark); }
+  .form-card input:focus-visible, .form-card button:focus-visible, .btn:focus-visible { outline: 3px solid var(--pb-yellow); outline-offset: 2px; }
+  .ferr { display: none; margin-top: 4px; font-size: 14px; color: var(--err-on-dark); }
+  .ferr.show { display: block; }
+  .ferr::before { content: '! '; font-weight: 700; }
+  .fconsent { display: flex; gap: 12px; align-items: flex-start; margin: 4px 0 10px; }
+  .fconsent input { flex: 0 0 auto; width: 28px; height: 28px; margin-top: 1px; accent-color: var(--pb-teal-2); }
+  .fconsent label { font-size: 16px; line-height: 1.4; color: #e6f2f2; }
+  .fnotice { font-size: 13px; color: #9fc3c3; line-height: 1.45; margin-bottom: 16px; }
+  .fnotice a { color: var(--pb-teal-2); }
+  .form-card .btn { width: 100%; }
+  .form-card .btn-secondary { margin-top: 12px; }
+
+  /* End screens */
+  .save-status { min-height: 24px; margin: -8px 0 14px; font-size: clamp(14px, 1.6vw, 17px); color: #b8d4d4; }
+  .save-status.ok { color: var(--pb-teal-2); }
+  .save-status.fail { color: var(--err-on-dark); }
+  .auto-reset { margin-top: 12px; font-size: 13px; color: #8ec5c5; letter-spacing: 0.4px; }
+  .perf-line { font-size: clamp(16px, 2vw, 22px); color: #fff; margin: -8px 0 18px; }
+
+  /* Controller lost during a phone game */
+  #pauseBanner { position: absolute; left: 50%; top: 18%; transform: translateX(-50%); z-index: 11; display: none; max-width: 80%; text-align: center;
+    padding: 14px 22px; border-radius: 10px; font-size: clamp(16px, 2vw, 22px); color: #fff; background: rgba(10,17,40,0.95); border: 2px solid var(--pb-yellow); }
+  #pauseBanner.show { display: block; }
 </style>
 </head>
 <body>
@@ -44,34 +111,78 @@
   <canvas id="game"></canvas>
   <canvas id="confettiCanvas"></canvas>
 
-  <div class="overlay active" id="startScreen">
-    <div class="pb-logo"><img src="https://github.com/price-baileymarketing-star/Scaling-Breakout/blob/main/PB%20Box%20Logo.jpg?raw=true" alt="Price Bailey"></div>
-    <h1>Scale <span class="brand">Up</span></h1>
-    <h2>Price Bailey - ScaleUp Growth Game</h2>
-    <p class="desc">Guide your business and break through the barriers to growth - from initial funding through regulatory compliance and market competition - to achieve a successful IPO. Drag the executive desk to deflect investment and break through obstacles.</p>
-    <button class="btn" id="startBtn">Begin Growth Phase</button>
-    <div class="terminal-line">&gt; SYSTEM READY &middot; TOUCH TO BEGIN</div>
+  <div class="overlay active scrollable" id="startScreen">
+    <div class="start-grid">
+      <div class="start-main">
+        <div class="pb-logo"><img src="assets/pb-box-logo.jpg" alt="Price Bailey"></div>
+        <h1>Scale <span class="brand">Up</span></h1>
+        <h2>Price Bailey - ScaleUp Growth Game</h2>
+        <p class="desc">Guide your business and break through the barriers to growth - from initial funding through regulatory compliance and market competition - to achieve a successful IPO. Drag the executive desk to deflect investment and break through obstacles.</p>
+        <button class="btn" id="startBtn">Play on this screen</button>
+        <div class="terminal-line">&gt; SCAN THE QR CODE &middot; OR PLAY HERE</div>
+      </div>
+      <div class="qr-card" id="qrCard">
+        <div class="qr-title">Play on your phone</div>
+        <div class="qr-box" id="qrBox" role="img" aria-label="QR code to play on your phone"></div>
+        <div class="qr-code" id="roomCode" aria-label="Game code">----</div>
+        <div class="qr-url" id="qrUrl"></div>
+        <div class="qr-status" id="qrStatus" role="status" aria-live="polite"><span class="dot"></span><span id="qrStatusText">Connecting</span></div>
+      </div>
+    </div>
   </div>
 
+  <!-- Details form for players on this screen. Shown before every game. -->
+  <div class="overlay scrollable" id="detailsScreen" role="dialog" aria-modal="true" aria-labelledby="dTitle" style="z-index:12">
+    <div class="form-card">
+      <h1 id="dTitle">Enter your details to play</h1>
+      <p class="desc">Your score appears on the screen. Your details do not.</p>
+      <form id="dForm" novalidate autocomplete="off">
+        <div class="frow">
+          <div class="ff"><label for="d_firstname">First name</label>
+            <input type="text" id="d_firstname" autocomplete="off" autocapitalize="words" aria-describedby="de_firstname"><div class="ferr" id="de_firstname"></div></div>
+          <div class="ff"><label for="d_lastname">Last name</label>
+            <input type="text" id="d_lastname" autocomplete="off" autocapitalize="words" aria-describedby="de_lastname"><div class="ferr" id="de_lastname"></div></div>
+        </div>
+        <div class="ff"><label for="d_email">Business email</label>
+          <input type="email" id="d_email" autocomplete="off" autocapitalize="off" inputmode="email" aria-describedby="de_email"><div class="ferr" id="de_email"></div></div>
+        <div class="ff"><label for="d_company">Organisation</label>
+          <input type="text" id="d_company" autocomplete="off" autocapitalize="words" aria-describedby="de_company"><div class="ferr" id="de_company"></div></div>
+        <div class="ff"><label for="d_mobile">Mobile number <span class="opt">(optional)</span></label>
+          <input type="tel" id="d_mobile" autocomplete="off" inputmode="tel" aria-describedby="de_mobile"><div class="ferr" id="de_mobile"></div></div>
+        <div class="fconsent"><input type="checkbox" id="d_consent"><label for="d_consent" id="d_consentLabel"></label></div>
+        <p class="fnotice" id="d_notice"></p>
+        <button type="submit" class="btn" id="dStart">Start game</button>
+        <button type="button" class="btn btn-secondary" id="dBack">Back</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="pauseBanner" role="status" aria-live="polite">Controller lost. Waiting for the phone to reconnect.</div>
+
   <div class="overlay" id="winScreen">
-    <div class="pb-logo"><img src="https://github.com/price-baileymarketing-star/Scaling-Breakout/blob/main/PB%20Box%20Logo.jpg?raw=true" alt="Price Bailey"></div>
+    <div class="pb-logo"><img src="assets/pb-box-logo.jpg" alt="Price Bailey"></div>
     <h1>IPO <span class="brand">Successful</span></h1>
     <h2>Growth Strategy Achieved</h2>
     <div class="time-bonus-display" id="timeBonusDisplay"></div>
     <div class="valuation" id="finalValuation">&pound;0</div>
     <p class="desc">Congratulations on a successful public offering. Your business has reached its full potential through disciplined growth and market execution.</p>
-    <button class="btn" id="winFormBtn">Leave your details &rarr;</button>
-    <button class="btn btn-secondary" id="playAgainBtn">Play Again</button>
+    <p class="save-status" id="winSave" role="status" aria-live="polite"></p>
+    <button class="btn btn-secondary" id="winRetry" style="display:none;margin:0 0 12px">Try saving again</button>
+    <button class="btn" id="playAgainBtn">New game</button>
+    <p class="auto-reset" id="winCountdown"></p>
   </div>
 
   <div class="overlay" id="loseScreen">
-    <div class="pb-logo"><img src="https://github.com/price-baileymarketing-star/Scaling-Breakout/blob/main/PB%20Box%20Logo.jpg?raw=true" alt="Price Bailey"></div>
+    <div class="pb-logo"><img src="assets/pb-box-logo.jpg" alt="Price Bailey"></div>
     <h1>Business <span class="brand">Stalled</span></h1>
     <h2>Growth Phase Interrupted</h2>
     <div class="valuation" id="loseValuation" style="color:#e74c3c;text-shadow:0 0 30px rgba(231,76,60,0.5)">&pound;0</div>
     <p class="desc">Every successful business faces setbacks. With the right strategy and advisers, growth can be achieved. Time to regroup and try again.</p>
-    <button class="btn" id="loseFormBtn">Leave your details &rarr;</button>
-    <button class="btn btn-secondary" id="restartBtn">Restart Game</button>
+    <p class="perf-line" id="losePerf"></p>
+    <p class="save-status" id="loseSave" role="status" aria-live="polite"></p>
+    <button class="btn btn-secondary" id="loseRetry" style="display:none;margin:0 0 12px">Try saving again</button>
+    <button class="btn" id="restartBtn">New game</button>
+    <p class="auto-reset" id="loseCountdown"></p>
   </div>
 </div>
 
@@ -80,9 +191,25 @@
   <span class="cta-text">Talk to an adviser</span>
 </a>
 
+<script src="lib/mqtt.min.js"></script>
+<script src="lib/qrcode.js"></script>
+<script src="lib/link.js"></script>
+<script src="lib/hubspot.js"></script>
 <script>
 (function() {
   'use strict';
+
+  /* =====================================================================
+     SETTINGS you might want to change. HubSpot settings are in lib/hubspot.js
+     ===================================================================== */
+  var SHOW_INGAME_CTA = false;          // the corner "Talk to an adviser" link. Off: it opens a stray tab on a stand screen.
+  var FORM_IDLE_CLOSE_MS = 90000;       // big-screen details form closes and clears after this long with no input
+  var END_AUTO_RESET_MS = 45000;        // end screen returns to a fresh QR code after this long
+  var STATE_PUSH_MS = 250;              // game state to the phone, about four times a second
+  var CONTROLLER_TIMEOUT_MS = 6000;     // phone counts as gone after this much silence
+  var CONTROLLER_LOST_RESET_MS = 30000; // phone game paused this long with no phone: reset to a fresh QR code
+  var NEW_GAME_RELOAD_MS = 800;         // gap between telling the phone and reloading
+  /* ===================================================================== */
 
   // ---------- Setup ----------
   var canvas = document.getElementById('game');
@@ -109,7 +236,7 @@
   pbLogoImg.crossOrigin = 'anonymous';
   var pbLogoLoaded = false;
   pbLogoImg.onload = function() { pbLogoLoaded = true; };
-  pbLogoImg.src = 'https://github.com/price-baileymarketing-star/Scaling-Breakout/blob/main/PB%20Box%20Logo.jpg?raw=true';
+  pbLogoImg.src = 'assets/pb-box-logo.jpg';
 
   var W = 1280, H = 800;
   var DPR = 1;
@@ -462,12 +589,16 @@
     return relX * W;
   }
 
+  function remoteSteering() { return playMode === 'phone' && (gameState === STATE.PLAYING || gameState === STATE.PAUSED); }
+
   function onPointerDown(e) {
+    if (remoteSteering()) return;
     e.preventDefault();
     pointerActive = true;
     paddle.targetX = getPointerX(e) - paddle.width / 2;
   }
   function onPointerMove(e) {
+    if (remoteSteering()) return;
     if (e.touches) {
       if (!pointerActive) return;
       e.preventDefault();
@@ -484,12 +615,19 @@
   canvas.addEventListener('mouseup', onPointerUp);
   canvas.addEventListener('mouseleave', onPointerUp);
 
+  function typingInField(e) {
+    var t = e.target;
+    return detailsOpen || (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT'));
+  }
   window.addEventListener('keydown', function(e) {
+    if (typingInField(e)) return;                       // letters and spaces belong to the form
+    unlockAudio();
+    if (remoteSteering()) return;                       // the phone is steering
     if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = true;
     if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = true;
     if (e.key === ' ' && gameState === STATE.MENU) {
       e.preventDefault();
-      startGame();
+      openDetailsForm();                                // details first, then the game starts
     }
   });
   window.addEventListener('keyup', function(e) {
@@ -497,7 +635,10 @@
     if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = false;
   });
 
-  document.addEventListener('touchmove', function(e) { e.preventDefault(); }, { passive: false });
+  document.addEventListener('touchmove', function(e) {
+    if (e.target && e.target.closest && e.target.closest('.scrollable')) return;   // form and title screens may scroll
+    e.preventDefault();
+  }, { passive: false });
   document.addEventListener('gesturestart', function(e) { e.preventDefault(); });
   document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
 
@@ -872,7 +1013,7 @@
         addShake(20, 40);
         loseValuation.textContent = '\u00A3' + formatNumber(score);
         ingameCTA.classList.remove('visible');
-        setTimeout(function() { loseScreen.classList.add('active'); }, 800);
+        setTimeout(function() { showEndScreen('lose'); }, 800);
         return;
       }
     }
@@ -987,16 +1128,19 @@
   }
 
   // ---------- Game logic ----------
-  function startGame() {
+  // mode: 'screen' (played here, details came from the big-screen form) or 'phone'
+  function startGame(mode) {
+    playMode = mode === 'phone' ? 'phone' : 'screen';
     initAudio();
     if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
     startScreen.classList.remove('active');
     winScreen.classList.remove('active');
     loseScreen.classList.remove('active');
-    ingameCTA.classList.add('visible');
+    if (SHOW_INGAME_CTA) ingameCTA.classList.add('visible');
     resetGame();
     gameStartTime = Date.now();
     gameState = STATE.PLAYING;
+    pushState(true);
   }
 
   function resetGame() {
@@ -1062,7 +1206,7 @@
       gameState = STATE.LOSE;
       loseValuation.textContent = '\u00A3' + formatNumber(score);
       ingameCTA.classList.remove('visible');
-      setTimeout(function() { loseScreen.classList.add('active'); }, 600);
+      setTimeout(function() { showEndScreen('lose'); }, 600);
     } else {
       spawnBall();
     }
@@ -1397,8 +1541,9 @@
         '<div class="breakdown">\u00A3' + formatNumber(baseScore) + ' \u00D7 ' + multiplier.toFixed(1) + ' = \u00A3' + formatNumber(finalScore) + '</div>';
 
       finalValuation.textContent = '\u00A3' + formatNumber(finalScore);
+      winMsg = 'IPO reached in ' + timeStr + '. ' + tier.charAt(0) + tier.slice(1).toLowerCase() + '.';
       ingameCTA.classList.remove('visible');
-      setTimeout(function() { winScreen.classList.add('active'); }, 1200);
+      setTimeout(function() { showEndScreen('win'); }, 1200);
     }
   }
 
@@ -2082,6 +2227,7 @@
 
     update();
     draw();
+    remoteTick();
     if (confetti.length > 0) {
       updateConfetti();
       drawConfetti();
@@ -2090,41 +2236,294 @@
     }
   }
 
-  // ---------- Buttons ----------
-  startBtn.addEventListener('click', startGame);
-  playAgainBtn.addEventListener('click', startGame);
-  restartBtn.addEventListener('click', startGame);
+  // ---------- Remote play and lead capture ----------
+  // Two ways to play, both start with the details form:
+  //   phone:  scan the QR code, fill in the form on the phone, steer by sliding a finger.
+  //   screen: press "Play on this screen", fill in the form here, play with mouse, touch or keys.
+  // Messages are sent through lib/link.js. Details are sent to HubSpot by lib/hubspot.js.
+  // The big screen never receives a phone player's details.
 
-  [startBtn, playAgainBtn, restartBtn].forEach(function(btn) {
-    btn.addEventListener('touchstart', function(e) {
-      e.preventDefault();
-      startGame();
-    }, { passive: false });
-  });
+  function byId(id) { return document.getElementById(id); }
 
-  // ---------- Price Bailey enquiry form ----------
-  // Passes the final score and the game's own URL as WPForms prefill params
-  // so the form's "Play again" can send the player back here.
-  var FORM_BASE = 'https://www.pricebailey.co.uk/enquiry-form/game/';
-  var SCORE_FIELD = 'wpf72332_23';   // score field
-  var GAMEURL_FIELD = 'wpf72332_31'; // Game_URL field (field id 31, from the form source)
-  var GAME_URL = 'https://price-baileymarketing-star.github.io/Scaling-Breakout/'; 
+  var playMode = 'screen';            // 'screen' or 'phone': who is steering this game
+  var link = null;
+  var roomCode = '';
+  var linkStatus = { net: 'connecting', peer: 'none' };
+  var activeCid = '';                 // the one phone allowed to play this game
+  var activeSeen = 0;                 // when we last heard from it
+  var hadController = false;
+  var bigDetails = null;              // details typed on this screen. Memory only. Gone on new game.
+  var winMsg = '';
+  var detailsOpen = false, idleTimer = null;
+  var lastPushAt = 0, lastPushKey = '', lastQrAt = 0;
+  var newGameStarted = false;
+  var endTimer = null, countdownTimer = null;
+  var pausedAt = 0;
+  var saveRetried = { win: false, lose: false };
 
-  var winFormBtn = document.getElementById('winFormBtn');
-  var loseFormBtn = document.getElementById('loseFormBtn');
-
-  function openEnquiryForm() {
+  /* ---- Sound: browsers only allow it after a touch or key press on this page ---- */
+  function unlockAudio() {
+    initAudio();
     if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-    var params = new URLSearchParams();
-    params.set(SCORE_FIELD, Math.max(0, Math.round(score)));
-    params.set(GAMEURL_FIELD, GAME_URL);
-    window.location.href = FORM_BASE + '?' + params.toString(); // same tab
+  }
+  document.addEventListener('pointerdown', unlockAudio, { passive: true });
+
+  /* ---- QR panel status ---- */
+  function setQr(text, kind) {
+    byId('qrStatusText').textContent = text;
+    byId('qrStatus').className = 'qr-status ' + (kind || '');
+  }
+  function refreshQr() {
+    if (!link) return;
+    var alive = activeCid && (Date.now() - activeSeen < CONTROLLER_TIMEOUT_MS);
+    if (alive) setQr('Controller connected', 'ok');
+    else if (hadController && !alive) setQr('Controller lost. Scan the code to reconnect.', 'bad');
+    else if (linkStatus.net === 'offline') setQr('No internet. Play on this screen.', 'bad');
+    else if (linkStatus.net === 'connecting') setQr('Connecting', '');
+    else setQr('Waiting for controller', '');
   }
 
-  winFormBtn.addEventListener('click', openEnquiryForm);
-  loseFormBtn.addEventListener('click', openEnquiryForm);
-  winFormBtn.addEventListener('touchstart', function(e) { e.preventDefault(); openEnquiryForm(); }, { passive: false });
-  loseFormBtn.addEventListener('touchstart', function(e) { e.preventDefault(); openEnquiryForm(); }, { passive: false });
+  /* ---- Game state sent to the phone ---- */
+  function stateName() {
+    if (gameState === STATE.PLAYING || gameState === STATE.PAUSED) return 'playing';
+    if (gameState === STATE.WIN) return 'win';
+    if (gameState === STATE.LOSE) return 'lose';
+    return 'lobby';
+  }
+  function buildState() {
+    var s = stateName();
+    var m = {
+      t: 'st', s: s,
+      by: s === 'lobby' ? '' : playMode,
+      ctl: (s === 'lobby' || playMode === 'phone') ? activeCid : '',   // empty while someone plays on this screen
+      sc: Math.floor(score), lv: lives, pn: getPhaseName(phase)
+    };
+    if (s === 'win') m.msg = winMsg;
+    if (s === 'lose') m.msg = 'You reached the ' + getPhaseName(phase) + ' phase.';
+    return m;
+  }
+  function pushState(force) {
+    if (!link) return;
+    var m = buildState();
+    var key = [m.s, m.by, m.ctl, m.lv, m.pn].join('|');
+    var now = Date.now();
+    var every = m.s === 'playing' ? STATE_PUSH_MS : 1000;
+    if (force || key !== lastPushKey || now - lastPushAt >= every) {
+      lastPushKey = key; lastPushAt = now;
+      link.send(m);
+    }
+  }
+
+  /* ---- Called every frame from the loop ---- */
+  function remoteTick() {
+    if (!link) return;
+    var now = Date.now();
+    var quiet = activeCid && (now - activeSeen > CONTROLLER_TIMEOUT_MS);
+    var phoneGame = playMode === 'phone' && (gameState === STATE.PLAYING || gameState === STATE.PAUSED);
+
+    if (quiet && phoneGame) {
+      if (gameState === STATE.PLAYING) {                 // phone dropped: freeze the game and wait for it
+        gameState = STATE.PAUSED; pausedAt = now;
+        byId('pauseBanner').classList.add('show');
+      } else if (now - pausedAt > CONTROLLER_LOST_RESET_MS) {
+        newGame();                                       // nobody came back: fresh QR code for the next player
+      }
+    } else if (quiet && gameState === STATE.MENU) {
+      activeCid = '';                                    // phone walked away from the title screen
+    } else if (gameState === STATE.PAUSED && playMode === 'phone' && activeCid) {
+      gameStartTime += now - pausedAt;                   // do not count the pause against the time bonus
+      gameState = STATE.PLAYING;
+      byId('pauseBanner').classList.remove('show');
+    }
+
+    pushState(false);
+    if (now - lastQrAt > 500) { lastQrAt = now; refreshQr(); }
+  }
+
+  /* ---- Messages from the phone ---- */
+  function onRemote(m) {
+    if (!m || !m.c) return;
+    var now = Date.now();
+    var phoneGame = playMode === 'phone' && (gameState === STATE.PLAYING || gameState === STATE.PAUSED);
+
+    if (activeCid && activeCid !== m.c) {
+      if (now - activeSeen < CONTROLLER_TIMEOUT_MS || phoneGame) return;   // someone else holds this game
+      activeCid = '';
+    }
+    if (!activeCid) {
+      if (gameState !== STATE.MENU) return;              // game running or finished: no new players until reset
+      activeCid = m.c; hadController = true;
+      pushState(true);
+    }
+    activeSeen = now;
+
+    if (m.t === 'mv') {
+      if (phoneGame && typeof m.x === 'number' && isFinite(m.x)) {
+        var x = Math.max(0, Math.min(1, m.x));
+        paddle.targetX = x * W - paddle.width / 2;
+      }
+    } else if (m.t === 'start') {
+      if (gameState === STATE.MENU) {                    // safe to receive twice: only the first one starts anything
+        closeDetailsForm();                              // a half-filled form on this screen is closed and cleared
+        bigDetails = null;
+        startGame('phone');
+      }
+    } else if (m.t === 'newgame') {
+      if (gameState === STATE.WIN || gameState === STATE.LOSE) newGame();
+    }
+  }
+
+  /* ---- Details form on this screen ---- */
+  var DFIELDS = ['firstname', 'lastname', 'email', 'company', 'mobile'];
+  function readDetails() {
+    return {
+      firstname: byId('d_firstname').value, lastname: byId('d_lastname').value, email: byId('d_email').value,
+      company: byId('d_company').value, mobile: byId('d_mobile').value, consent: byId('d_consent').checked
+    };
+  }
+  function showDErrors(errors) {
+    DFIELDS.forEach(function(f) {
+      var msg = errors[f], el = byId('de_' + f);
+      el.textContent = msg || '';
+      el.classList.toggle('show', !!msg);
+      byId('d_' + f).setAttribute('aria-invalid', msg ? 'true' : 'false');
+    });
+  }
+  function clearDetailsForm() { byId('dForm').reset(); showDErrors({}); }
+  function resetIdle() { clearTimeout(idleTimer); if (detailsOpen) idleTimer = setTimeout(closeDetailsForm, FORM_IDLE_CLOSE_MS); }
+
+  function openDetailsForm() {
+    if (gameState !== STATE.MENU || detailsOpen || newGameStarted) return;
+    unlockAudio();
+    detailsOpen = true;
+    clearDetailsForm();
+    byId('detailsScreen').classList.add('active');
+    resetIdle();
+    setTimeout(function() { var f = byId('d_firstname'); if (f && detailsOpen) f.focus(); }, 60);
+  }
+  function closeDetailsForm() {
+    if (!detailsOpen) return;
+    detailsOpen = false;
+    clearTimeout(idleTimer);
+    clearDetailsForm();                                  // nothing personal is left on this screen
+    byId('detailsScreen').classList.remove('active');
+    if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+  }
+
+  ['input', 'keydown', 'pointerdown', 'touchstart', 'focusin'].forEach(function(ev) {
+    byId('detailsScreen').addEventListener(ev, resetIdle, { passive: true });
+  });
+  byId('detailsScreen').addEventListener('keydown', function(e) { if (e.key === 'Escape') closeDetailsForm(); });
+  byId('dBack').addEventListener('click', closeDetailsForm);
+  byId('dForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var v = PBHubSpot.validate(readDetails());
+    showDErrors(v.errors);
+    if (!v.ok) {
+      for (var i = 0; i < DFIELDS.length; i++) { if (v.errors[DFIELDS[i]]) { byId('d_' + DFIELDS[i]).focus(); break; } }
+      return;
+    }
+    bigDetails = v.details;                              // memory only
+    PBHubSpot.submit(bigDetails, { label: 'start' });    // the lead is kept even if the game is abandoned
+    closeDetailsForm();                                  // clears the form as the game starts
+    startGame('screen');
+  });
+
+  /* ---- End screens ---- */
+  function setSave(kind, state, text) {
+    var el = byId(kind + 'Save');
+    el.textContent = text;
+    el.className = 'save-status ' + (state === 'ok' ? 'ok' : state === 'fail' ? 'fail' : '');
+    byId(kind + 'Retry').style.display = state === 'fail' ? 'block' : 'none';
+  }
+  function saveBigFinal(kind) {
+    if (!bigDetails) return;
+    setSave(kind, 'saving', 'Saving your score...');
+    PBHubSpot.submit(bigDetails, { score: score, label: 'end' }).then(function(r) {
+      if (r.ok) { setSave(kind, 'ok', 'Your score and details are saved.'); return; }
+      if (!saveRetried[kind]) { saveRetried[kind] = true; setTimeout(function() { saveBigFinal(kind); }, 3000); return; }
+      setSave(kind, 'fail', 'We could not save your score. Please tell a member of the team.');
+    });
+  }
+  byId('winRetry').addEventListener('click', function() { saveRetried.win = true; saveBigFinal('win'); });
+  byId('loseRetry').addEventListener('click', function() { saveRetried.lose = true; saveBigFinal('lose'); });
+
+  function showEndScreen(kind) {
+    if (kind === 'lose') byId('losePerf').textContent = 'You reached the ' + getPhaseName(phase) + ' phase.';
+    (kind === 'win' ? winScreen : loseScreen).classList.add('active');
+    if (playMode === 'screen') saveBigFinal(kind);       // phone players are saved by the phone
+    // Back to a fresh QR code for the next player
+    var endAt = Date.now() + END_AUTO_RESET_MS;
+    var cd = byId(kind + 'Countdown');
+    function tick() {
+      var s = Math.max(0, Math.ceil((endAt - Date.now()) / 1000));
+      cd.textContent = 'New QR code in ' + s + ' seconds';
+    }
+    tick();
+    clearInterval(countdownTimer); countdownTimer = setInterval(tick, 1000);
+    clearTimeout(endTimer); endTimer = setTimeout(newGame, END_AUTO_RESET_MS);
+  }
+
+  /* ---- New game: tell the phone, then reload so the next player gets a fresh QR code ---- */
+  function newGame() {
+    if (newGameStarted) return;
+    newGameStarted = true;
+    clearTimeout(endTimer); clearInterval(countdownTimer);
+    bigDetails = null;
+    closeDetailsForm();
+    var delay = 0;
+    if (link) {
+      var n = 0;
+      (function bye() { link.send({ t: 'bye' }); if (++n < 3) setTimeout(bye, 250); })();
+      delay = NEW_GAME_RELOAD_MS;
+    }
+    setTimeout(function() { location.reload(); }, delay);
+  }
+
+  /* ---- Buttons ---- */
+  startBtn.addEventListener('click', openDetailsForm);
+  startBtn.addEventListener('touchstart', function(e) { e.preventDefault(); openDetailsForm(); }, { passive: false });
+  [playAgainBtn, restartBtn].forEach(function(btn) {
+    btn.addEventListener('click', newGame);
+    btn.addEventListener('touchstart', function(e) { e.preventDefault(); newGame(); }, { passive: false });
+  });
+
+  /* ---- Start the connection and draw the QR code ---- */
+  function initRemote() {
+    if (typeof PBHubSpot !== 'undefined') {
+      byId('d_consentLabel').textContent = PBHubSpot.SETTINGS.CONSENT_TEXT;
+      var n = byId('d_notice');
+      n.textContent = PBHubSpot.SETTINGS.PRIVACY_NOTICE + ' ';
+      if (PBHubSpot.SETTINGS.PRIVACY_URL) {
+        var a = document.createElement('a');
+        a.href = PBHubSpot.SETTINGS.PRIVACY_URL; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'Privacy notice';
+        n.appendChild(a);
+      }
+    }
+    if (typeof PBLink === 'undefined' || typeof qrcode === 'undefined') { byId('qrCard').style.display = 'none'; return; }
+
+    roomCode = PBLink.newRoomCode();
+    var url = PBLink.controllerUrl(roomCode);
+    try {
+      var qr = qrcode(0, 'M');
+      qr.addData(url);
+      qr.make();
+      byId('qrBox').innerHTML = qr.createSvgTag({ cellSize: 4, margin: 0, scalable: true });
+    } catch (err) {
+      byId('qrBox').innerHTML = '<div class="qr-off">QR code unavailable. Use the address below.</div>';
+    }
+    byId('roomCode').textContent = roomCode;
+    byId('qrUrl').textContent = url.replace(/^https?:\/\//, '');
+
+    link = PBLink.connect({
+      role: 'screen',
+      room: roomCode,
+      onMessage: onRemote,
+      onStatus: function(s) { linkStatus = s; refreshQr(); }
+    });
+    refreshQr();
+  }
+
 
   // ---------- Init ----------
   resize();
@@ -2134,6 +2533,7 @@
   buildBricks();
   paddle.x = W / 2 - paddle.width / 2;
   paddle.targetX = paddle.x;
+  initRemote();
   requestAnimationFrame(loop);
 
 })();
